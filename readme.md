@@ -10,7 +10,7 @@ The available options are as follows:
 
 **TODO: add option list with descriptions here**
 
-#### `arrows`
+#### arrows
 
 This defines whether or not previous/next arrow controls should be used. If passed as `false`, no arrow controls will be generated or used.
 
