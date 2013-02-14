@@ -8,9 +8,10 @@
 		<script src="./js/carousel.jquery.js"></script>
 		<script>
 			$(function() {
-				$('.carousel').carousel({
-					arrows: false
-				});
+				$('.carousel')
+					.carousel({
+						arrows : true
+					});
 
 				$('.carousel').carousel('goTo', 1);
 			});
@@ -18,7 +19,11 @@
 	</head>
 	<body>
 		<div class="carousel">
-
+			<ol>
+				<li style="background: red; width: 100px; height: 100px;"></li>
+				<li style="background: blue; width: 100px; height: 100px;"></li>
+				<li style="background: green; width: 100px; height: 100px;"></li>
+			</ol>
 		</div>
 	</body>
 </html>
