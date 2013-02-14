@@ -1,5 +1,5 @@
 {
-	"name": "Message Carousel jQuery Plugin",
+	"name": "carousel.jQuery",
 	"version": "0.0.1",
 	"main": "./js/carousel.jquery.js",
 	"dependencies": {
