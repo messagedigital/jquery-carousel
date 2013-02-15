@@ -2,6 +2,14 @@
 
 This jQuery plugin provides carousel functionality typical for the sites we build.
 
+## Installation
+
+This plugin is intended for installation using the [Bower](http://twitter.github.com/bower/) package management system for Javascript libraries.
+
+From within your project directory, run the following command to install this plugin to your configured components directory:
+
+	bower install git@server.local:jquery-plugins/carousel.git
+
 ## Options
 
 The available options are as follows:
