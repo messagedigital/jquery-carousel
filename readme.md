@@ -1,12 +1,10 @@
-# Carousel jQuery Plugin
+# Carousel jQuery Plugin #
 
 This jQuery plugin provides carousel functionality typical for the sites we build.
 
-## Installation
+## Installation ##
 
-This plugin is intended for installation using the [Bower](http://twitter.github.com/bower/) package management system for Javascript libraries.
-
-From within your project directory, run the following command to install this plugin to your configured components directory:
+This plugin is intended for installation using the [Bower](http://twitter.github.com/bower/) package management system for Javascript libraries. From within your project directory, run the following command to install this plugin to your configured components directory:
 
 	bower install git@server.local:jquery-plugins/carousel.git
 
@@ -16,7 +14,7 @@ The available options are as follows:
 
 **TODO: add option list with descriptions here**
 
-### arrows
+### arrows ###
 
 This defines whether or not previous/next arrow controls should be used. If passed as `false`, no arrow controls will be generated or used.
 
@@ -49,12 +47,12 @@ Or as an object with named properties of `next` and either `prev` or `previous`.
 
 The `arrows` option defaults to `false`.
 
-## Prerequisites
+## Prerequisites ##
 
 **TODO: mention what markup it expects for the element**
 
-## Roadmap
+## Roadmap ##
 
-### Feature ideas
+### Feature ideas ###
 
 * Add `randomise` option that will shuffle the carousel slides when initialising.
