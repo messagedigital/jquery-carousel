@@ -8,18 +8,21 @@
 		<script src="./js/carousel.jquery.js"></script>
 		<script>
 			$(function() {
-				$('.carousel')
+				$('.carousel ol')
 					.carousel({
-						arrows : true
+						arrows : true,
+						onReady: function(e) {
+							e.carousel('goTo', 1);
+						}
 					});
 
-				$('.carousel').carousel('goTo', 1);
+
 			});
 		</script>
 	</head>
 	<body>
 		<div class="carousel">
-			<ol>
+			<ol style="margin: 0; padding: 0; list-style: none;">
 				<li style="background: red; width: 100px; height: 100px;"></li>
 				<li style="background: blue; width: 100px; height: 100px;"></li>
 				<li style="background: green; width: 100px; height: 100px;"></li>
