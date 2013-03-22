@@ -85,14 +85,11 @@
 				$this.css({
 					float: 'left',
 					width: firstSlide.width() * state.slideCount
-				});
-
-				$this.children().css({
+				})
+				.children().css({
 					display: 'block',
 					float  : 'left'
 				});
-				// determine width/height of first slide
-				// set that on the window, set big width on the ul
 
 				// Initialise arrow controls
 				if (settings.arrows !== false) {
@@ -142,15 +139,8 @@
 					}
 				}
 
-				console.log(state);
-
-				// if (typeof settings.onHover === 'function') {
-				// 	$this.on('mouseover', settings.onHover);
-				// }
-
 				// set up the interval if required (and put in data)
 				// set up events for hover and interaction
-				// add class of initialised once done
 				// add calculate method
 				// call calculate method when window/element size changes event
 				// call calculate method on interaction
@@ -203,11 +193,15 @@
 		},
 
 		goToStart : function() {
-			// call goTo(0)
+			return methods.goTo.call(this, 0);
 		},
 
 		goToEnd : function() {
-			// call goTo with the last index
+			return this.each(function() {
+				var self = $(this);
+
+				return methods.goTo.call(self, self.data('carousel').slideCount - 1);
+			});
 		},
 
 		goToNext : function() {
@@ -255,7 +249,6 @@
 			$.error('Method ' +  method + ' does not exist on jQuery.carousel');
 		}
 		// hover pause?
-		// methods for goTo(index) / goToStart / goToEnd
 		// methods for stop / start with intervals
 		// ensure widths are re-calculated on orientation change
 	};
