@@ -149,8 +149,8 @@
 				// Save state on the element for use later
 				$this.data('carousel', state);
 
-				// Go to the first slide, this sets active states etc
-				methods.goTo.call($this, 0);
+				// Set the initial state (first slide)
+				methods.updateState.call($this);
 
 				// Set initialised class
 				$this.addClass('carousel-initialised');
@@ -168,8 +168,7 @@
 			return this.each(function() {
 				var self   = $(this),
 					state  = self.data('carousel'),
-					offset = (100 / state.slideCount) * index,
-					isLast = (index + 1 === state.slideCount);
+					offset = (100 / state.slideCount) * index;
 
 				// Validate the index
 				if (isNaN(index) || index < 0 || index >= state.slideCount) {
@@ -194,20 +193,28 @@
 						}
 
 						// Fire the onComplete event, if defined & this is the last slide
-						if (isLast && typeof state.settings.onComplete === 'function') {
+						if (index + 1 === state.slideCount && typeof state.settings.onComplete === 'function') {
 							state.settings.onComplete(self);
 						}
 					}
 				});
 
+				methods.updateState.call(self);
+			});
+		},
+
+		updateState : function() {
+			return this.each(function() {
+				var state = $(this).data('carousel');
+
 				// Set active class on indicator
 				state.indicators
 					.children().removeClass('active')
-					.filter(':eq(' + index + ')').addClass('active');
+					.filter(':eq(' + state.current + ')').addClass('active');
 
 				// Set disabled class on controls where necessary
-				state.arrows.previous.toggleClass('disabled', (index === 0));
-				state.arrows.next.toggleClass('disabled', isLast);
+				state.arrows.previous.toggleClass('disabled', (state.current === 0));
+				state.arrows.next.toggleClass('disabled', (state.current + 1 === state.slideCount));
 			});
 		},
 
