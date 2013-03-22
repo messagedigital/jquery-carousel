@@ -114,10 +114,10 @@
 
 					// Set events for the arrow controls
 					state.arrows.next.on('click.carousel', function() {
-						methods.goToNext.call(self);
+						methods.goToNext.call($this);
 					});
 					state.arrows.previous.on('click.carousel', function() {
-						methods.goToPrevious.call(self);
+						methods.goToPrevious.call($this);
 					});
 				}
 
@@ -128,7 +128,7 @@
 					// Create each indicator
 					$this.children().each(function() {
 						indicatorHTML.append($('<li></li>').click(function() {
-							methods.goTo.call(self, $(this).index());
+							methods.goTo.call($this, $(this).index());
 						}));
 					});
 
@@ -151,11 +151,16 @@
 				// set up the interval if required (and put in data)
 				// set up events for hover and interaction
 				// add class of initialised once done
+				// add calculate method
+				// call calculate method when window/element size changes event
+				// call calculate method on interaction
 				//
 
 				// Save state on the element for use later
 				$this.data('carousel', state);
-				console.log(state);
+
+				// Go to the first slide, this sets active states etc
+				methods.goTo.call($this, 0);
 
 				// Set initialised class
 				$this.addClass('carousel-initialised');
@@ -166,6 +171,7 @@
 				}
 			});
 		},
+
 		goTo : function(slideIndex) {
 			index = Number(slideIndex);
 
@@ -184,23 +190,56 @@
 
 				// Animate the change of slide
 				self.animate({marginLeft: '-' + (100 * index) + '%'}, state.settings.speed);
+
+				// Set active class on indicator
+				state.indicators
+					.children().removeClass('active')
+					.filter(':eq(' + index + ')').addClass('active');
+
+				// Set disabled class on controls where necessary
+				state.arrows.previous.toggleClass('disabled', (index === 0));
+				state.arrows.next.toggleClass('disabled', (index + 1 === state.slideCount));
 			});
 		},
+
 		goToStart : function() {
 			// call goTo(0)
 		},
+
 		goToEnd : function() {
 			// call goTo with the last index
 		},
+
 		goToNext : function() {
-			console.log('go to next');
+			return this.each(function() {
+				var self = $(this);
+
+				try {
+					return methods.goTo.call(self, self.data('carousel').current + 1);
+				}
+				catch (e) {
+					return false;
+				}
+			});
 		},
+
 		goToPrevious : function() {
-			console.log('go to prev');
+			return this.each(function() {
+				var self = $(this);
+
+				try {
+					return methods.goTo.call(self, self.data('carousel').current - 1);
+				}
+				catch (e) {
+					return false;
+				}
+			});
 		},
+
 		start : function() {
 			// start the interval
 		},
+
 		stop : function() {
 			// stop the interval
 		}
