@@ -4,29 +4,154 @@
 		<meta charset="utf-8">
 		<title>Message Carousel jQuery Plugin &mdash; Examples</title>
 
+		<style type="text/css">
+			.container {
+				margin: 0 auto;
+				width: 800px;
+			}
+
+			.carousel {
+				position: relative;
+			}
+
+			.carousel ol {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.carousel .slides li {
+				width: 800px;
+				height: 400px;
+			}
+
+			.carousel .arrow {
+				position: absolute;
+				display: block;
+				width: 0;
+				height: 0;
+				top: 150px;
+				cursor: pointer;
+				text-indent: -5000%;
+			}
+
+			.carousel .arrow.previous {
+				left: 10px;
+
+				border-top: 50px solid transparent;
+				border-bottom: 50px solid transparent;
+				border-right: 50px solid black;
+			}
+
+			.carousel .arrow.next {
+				right: 10px;
+
+				border-top: 50px solid transparent;
+				border-bottom: 50px solid transparent;
+				border-left: 50px solid black;
+			}
+
+			.carousel .arrow.disabled {
+				opacity: .3;
+				cursor: default;
+			}
+
+			.carousel .indicators {
+				position: absolute;
+				display: block;
+				bottom: 20px;
+				left: 20px;
+				cursor: pointer;
+			}
+
+			.carousel .indicators li {
+				display: block;
+				float: left;
+				width: 20px;
+				height: 20px;
+				margin-right: 20px;
+				background: black;
+				opacity: 0.3;
+				border-radius: 99999px;
+				-webkit-border-radius: 99999px;
+				-moz-border-radius: 99999px;
+				-o-border-radius: 99999px;
+				-ms-border-radius: 99999px;
+			}
+
+			.carousel .indicators li.active {
+				opacity: 1;
+			}
+
+			@media all and (max-width: 800px) {
+				.container {
+					width: 100%;
+				}
+			}
+		</style>
+
 		<script src="./js/jquery-1.9.1.min.js"></script>
 		<script src="./js/carousel.jquery.js"></script>
 		<script>
 			$(function() {
-				$('.carousel ol')
-					.carousel({
-						arrows : true,
-						onReady: function(e) {
-							e.carousel('goTo', 1);
-						}
-					});
+				$('.carousel.standard ol').carousel({
+					arrows: true,
+					speed : 800
+				});
 
+				$('.carousel.auto ol').carousel({
+					indicators: true,
+					interval  : 1200,
+					speed     : 300,
+					onInteraction: function(e) {
+						e.carousel('stgrgrgrop');
+					}
+				});
 
+				$('.carousel.auto-stop-at-end ol').carousel({
+					arrows    : true,
+					indicators: true,
+					interval  : 1000,
+					speed     : 300,
+					onComplete: function(e) {
+						e.carousel('stop');
+					}
+				});
 			});
 		</script>
 	</head>
 	<body>
-		<div class="carousel">
-			<ol style="margin: 0; padding: 0; list-style: none;">
-				<li style="background: red; width: 100px; height: 100px;"></li>
-				<li style="background: blue; width: 100px; height: 100px;"></li>
-				<li style="background: green; width: 100px; height: 100px;"></li>
-			</ol>
+		<div class="container">
+			<h1>Message Carousel Examples</h1>
+
+			<h2>Standard sliding carousel, slow speed, arrows</h2>
+			<div class="carousel standard">
+				<ol class="slides">
+					<li style="background: red;"></li>
+					<li style="background: blue;"></li>
+					<li style="background: green;"></li>
+				</ol>
+			</div>
+
+			<h2>Automatic sliding carousel, indicators, stops on interaction</h2>
+			<div class="carousel auto">
+				<ol class="slides">
+					<li style="background: red;"></li>
+					<li style="background: blue;"></li>
+					<li style="background: green;"></li>
+					<li style="background: yellow;"></li>
+					<li style="background: orange;"></li>
+				</ol>
+			</div>
+
+			<h2>Automatic sliding carousel, indicators &amp; arrows, stops at the end</h2>
+			<div class="carousel auto-stop-at-end">
+				<ol class="slides">
+					<li style="background: red;"></li>
+					<li style="background: blue;"></li>
+					<li style="background: green;"></li>
+				</ol>
+			</div>
 		</div>
 	</body>
 </html>
