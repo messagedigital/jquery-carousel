@@ -1,14 +1,13 @@
 (function( $ ){
 	var methods = {
 		init : function(options) {
-			var self     = this,
-				defaults = {
+			var defaults = {
 					arrows    : false,   // Show arrow controls
-					indicators: true,    // Show position indicators / controls
+					indicators: false,   // Show position indicators / controls
 					infinite  : false,   // Imitate an infinite carousel (no start and end)
 					animation : 'slide', // Animation to use for moving between slides
 					speed     : 100,     // Speed in milliseconds for the animation
-					interval  : false,   // Interval for automatically moving between slides
+					interval  : false,   // Interval in milliseconds for automatically moving between slides
 
 					onReady      : false, // Callback for when the plugin is initialised
 					onChangeStart: false, // Callback for the start of the slide change animation
@@ -49,7 +48,7 @@
 			}
 
 			return this.each(function() {
-				var $this = $(this),
+				var self = $(this),
 					state = {
 						settings  : settings,
 						indicators: false,
@@ -58,7 +57,7 @@
 							next    : false
 						},
 						interval  : false,
-						slideCount: $this.children().length,
+						slideCount: self.children().length,
 						current   : 0
 					};
 
@@ -68,12 +67,12 @@
 				}
 
 				// Wrap slides in an element we can use as a "window" to the slides
-				$this.wrap($('<div>'));
+				self.wrap($('<div>'));
 
-				var wrap = $this.parent();
+				var wrap = self.parent();
 
 				// Get the first slide to use for measuring
-				var firstSlide = $this.children(':first');
+				var firstSlide = self.children(':first');
 
 				// Set the basic structural styling for the carousel
 				wrap.css({
@@ -82,7 +81,7 @@
 					overflow: 'hidden'
 				});
 
-				$this.css({
+				self.css({
 					float: 'left',
 					width: firstSlide.width() * state.slideCount
 				})
@@ -111,10 +110,10 @@
 
 					// Set events for the arrow controls
 					state.arrows.next.on('click.carousel', function() {
-						methods.goToNext.call($this);
+						methods.goToNext.call(self);
 					});
 					state.arrows.previous.on('click.carousel', function() {
-						methods.goToPrevious.call($this);
+						methods.goToPrevious.call(self);
 					});
 				}
 
@@ -123,9 +122,9 @@
 					var indicatorHTML = $('<ol class="indicators"></ol>');
 
 					// Create each indicator
-					$this.children().each(function() {
+					self.children().each(function() {
 						indicatorHTML.append($('<li></li>').click(function() {
-							methods.goTo.call($this, $(this).index());
+							methods.goTo.call(self, $(this).index());
 						}));
 					});
 
@@ -146,19 +145,43 @@
 				// call calculate method on interaction
 				//
 
+				// Bind the interaction event, if defined
+				if (typeof settings.onInteraction === 'function') {
+					var controls = $();
+
+					if (state.indicators !== false) {
+						controls = controls.add(state.indicators.children());
+					}
+
+					if (state.arrows.previous !== false) {
+						controls = controls.add(state.arrows.previous);
+					}
+
+					if (state.arrows.next !== false) {
+						controls = controls.add(state.arrows.next);
+					}
+
+					controls.on('click.carousel', function() {
+						settings.onInteraction(self);
+					});
+				}
+
 				// Save state on the element for use later
-				$this.data('carousel', state);
+				self.data('carousel', state);
 
 				// Set the initial state (first slide)
-				methods.updateState.call($this);
+				methods.updateState.call(self);
 
 				// Set initialised class
-				$this.addClass('carousel-initialised');
+				self.addClass('carousel-initialised');
 
 				// Fire the onReady event, if defined
 				if (typeof settings.onReady === 'function') {
-					settings.onReady($this);
+					settings.onReady(self);
 				}
+
+				// Start the interval, if defined
+				methods.start.call(self);
 			});
 		},
 
@@ -208,13 +231,20 @@
 				var state = $(this).data('carousel');
 
 				// Set active class on indicator
-				state.indicators
-					.children().removeClass('active')
-					.filter(':eq(' + state.current + ')').addClass('active');
+				if (state.indicators !== false) {
+					state.indicators
+						.children().removeClass('active')
+						.filter(':eq(' + state.current + ')').addClass('active');
+				}
 
 				// Set disabled class on controls where necessary
-				state.arrows.previous.toggleClass('disabled', (state.current === 0));
-				state.arrows.next.toggleClass('disabled', (state.current + 1 === state.slideCount));
+				if (state.arrows.previous !== false) {
+					state.arrows.previous.toggleClass('disabled', (state.current === 0));
+				}
+
+				if (state.arrows.next !== false) {
+					state.arrows.next.toggleClass('disabled', (state.current + 1 === state.slideCount));
+				}
 			});
 		},
 
@@ -256,12 +286,49 @@
 			});
 		},
 
+		cycle : function() {
+			return this.each(function() {
+				var self  = $(this),
+					state = self.data('carousel');
+
+				// If we're on the last slide, rewind back to the start
+				if (state.current + 1 === state.slideCount) {
+					methods.goToStart.call(self);
+				}
+				// Otherwise, go to next
+				else {
+					methods.goToNext.call(self);
+				}
+			});
+		},
+
 		start : function() {
-			// start the interval
+			return this.each(function() {
+				var self  = $(this),
+					state = self.data('carousel');
+
+				if (state.settings.interval !== false) {
+					var speed = Number(state.settings.interval);
+
+					if (isNaN(speed) || speed <= 0) {
+						$.error('Invalid interval speed set on jQuery.carousel: ' + state.settings.interval);
+					}
+
+					state.interval = setInterval(function() {
+						return methods.cycle.call(self);
+					}, speed);
+				}
+			});
 		},
 
 		stop : function() {
-			// stop the interval
+			return this.each(function() {
+				var state = $(this).data('carousel');
+
+				if (state.interval !== false) {
+					clearInterval(state.interval);
+				}
+			});
 		}
 	};
 
