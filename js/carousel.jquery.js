@@ -186,9 +186,6 @@
 				// Set the initial state (first slide)
 				methods.updateState.call(self);
 
-				// Set initialised class
-				self.addClass('carousel-initialised');
-
 				// Fire the onReady event, if defined
 				if (typeof settings.onReady === 'function') {
 					settings.onReady(self);
