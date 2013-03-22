@@ -178,8 +178,21 @@
 				// Set the current state
 				state.current = index;
 
+				// Fire the onChangeStart event, if defined
+				if (typeof state.settings.onChangeStart === 'function') {
+					state.settings.onChangeStart(self);
+				}
+
 				// Animate the change of slide
-				self.animate({marginLeft: '-' + (100 * index) + '%'}, state.settings.speed);
+				self.animate({marginLeft: '-' + (100 * index) + '%'}, {
+					duration: state.settings.speed,
+					complete: function() {
+						// Fire the onChangeEnd event, if defined
+						if (typeof state.settings.onChangeEnd === 'function') {
+							return state.settings.onChangeEnd(self);
+						}
+					}
+				});
 
 				// Set active class on indicator
 				state.indicators
