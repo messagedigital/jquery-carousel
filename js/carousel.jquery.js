@@ -1,13 +1,31 @@
+/**
+ * Carousel jQuery Plugin
+ *
+ * Provides functionality to create all the typical types of carousel sliders
+ * on modern websites.
+ *
+ * This is a *private* plugin, and should only be used by Message Digital Design.
+ *
+ * @author Message Digital Design <dev@message.co.uk>
+ * @author Joe Holdcroft <joe@message.co.uk>
+ */
 (function( $ ){
 	var methods = {
+		/**
+		 * Initialise the plugin.
+		 *
+		 * @param object options Object of options for this plugin
+		 *
+		 * @throws Exception     If the animation setting has an invalid value
+		 */
 		init : function(options) {
 			var defaults = {
 					arrows    : false,   // Show arrow controls
 					indicators: false,   // Show position indicators / controls
-					infinite  : false,   // Imitate an infinite carousel (no start and end)
 					animation : 'slide', // Animation to use for moving between slides
 					speed     : 100,     // Speed in milliseconds for the animation
 					interval  : false,   // Interval in milliseconds for automatically moving between slides
+					flexible  : true,    // Determines whether the carousel has a flexible width
 
 					onReady      : false, // Callback for when the plugin is initialised
 					onChangeStart: false, // Callback for the start of the slide change animation
@@ -48,7 +66,7 @@
 			}
 
 			return this.each(function() {
-				var self = $(this),
+				var self  = $(this),
 					state = {
 						settings  : settings,
 						indicators: false,
@@ -57,6 +75,7 @@
 							next    : false
 						},
 						interval  : false,
+						width     : false,
 						slideCount: self.children().length,
 						current   : 0
 					};
@@ -71,21 +90,13 @@
 
 				var wrap = self.parent();
 
-				// Get the first slide to use for measuring
-				var firstSlide = self.children(':first');
-
 				// Set the basic structural styling for the carousel
 				wrap.css({
-					width   : firstSlide.width(),
-					height  : firstSlide.height(),
+					width   : '100%',
 					overflow: 'hidden'
 				});
 
-				self.css({
-					float: 'left',
-					width: firstSlide.width() * state.slideCount
-				})
-				.children().css({
+				self.children().css({
 					display: 'block',
 					float  : 'left'
 				});
@@ -138,13 +149,6 @@
 					}
 				}
 
-				// set up the interval if required (and put in data)
-				// set up events for hover and interaction
-				// add calculate method
-				// call calculate method when window/element size changes event
-				// call calculate method on interaction
-				//
-
 				// Bind the interaction event, if defined
 				if (typeof settings.onInteraction === 'function') {
 					var controls = $();
@@ -169,6 +173,16 @@
 				// Save state on the element for use later
 				self.data('carousel', state);
 
+				// Calculate the dimensions
+				methods.setWidth.call(self, wrap.width());
+
+				// If this is a flexible carousel, set resize listeners to set the width
+				if (settings.flexible === true) {
+					$(window).on('resize.carousel orientationchange.carousel', function() {
+						methods.detectWidthChange.call(self);
+					});
+				}
+
 				// Set the initial state (first slide)
 				methods.updateState.call(self);
 
@@ -185,6 +199,70 @@
 			});
 		},
 
+		/**
+		 * Detect if the wrapper's width has changed.
+		 *
+		 * The wrapper's width is always 100%, so the computed width can change
+		 * if a parent element's width has changed.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
+		detectWidthChange: function() {
+			return this.each(function() {
+				var self      = $(this),
+					wrapWidth = self.parent().width();
+
+				if (wrapWidth !== self.data('carousel').width) {
+					methods.setWidth.call(self, wrapWidth);
+				}
+			});
+		},
+
+		/**
+		 * Set the width of the carousel.
+		 *
+		 * This sets the width for each slide, and sets the total width of the
+		 * slide container (the list element) to the new width * number of slides.
+		 *
+		 * @param  int slideWidth New width for the carousel
+		 *
+		 * @return object         jQuery object for the selected elements, for chaining
+		 *
+		 * @throws Exception      If the width passed is not a number or is < 0
+		 */
+		setWidth: function(slideWidth) {
+			width = Number(slideWidth);
+
+			if (isNaN(width) || width < 0) {
+				$.error('Invalid width set on jQuery.carousel.setWidth: ' + slideWidth);
+			}
+
+			return this.each(function() {
+				var self  = $(this),
+					state = self.data('carousel');
+
+				// Check the width is actually different
+				if (width !== state.width) {
+					// Update the width on the state
+					state.width = width;
+
+					// Update the slides & slide list width
+					self.css('width', width * state.slideCount)
+						.children().css('width', width);
+				}
+			});
+		},
+
+		/**
+		 * Go to a specific slide.
+		 *
+		 * @param  int slideIndex Index of the slide to go to
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 *
+		 * @throws Exception If the slide index does not exist, is not a number
+		 *                   or is >= the number of slides
+		 */
 		goTo : function(slideIndex) {
 			index = Number(slideIndex);
 
@@ -226,6 +304,15 @@
 			});
 		},
 
+		/**
+		 * Update the carousel state.
+		 *
+		 * This method performs some maintenance tasks such as moving the
+		 * `active` class on the indicators and setting `disabled` classes on
+		 * the arrows where appropriate.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
 		updateState : function() {
 			return this.each(function() {
 				var state = $(this).data('carousel');
@@ -248,10 +335,20 @@
 			});
 		},
 
+		/**
+		 * Go to the first slide in the carousel.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
 		goToStart : function() {
 			return methods.goTo.call(this, 0);
 		},
 
+		/**
+		 * Go to the last slide.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
 		goToEnd : function() {
 			return this.each(function() {
 				var self = $(this);
@@ -260,6 +357,14 @@
 			});
 		},
 
+		/**
+		 * Go to the slide after the currently active one.
+		 *
+		 * If the currently active slide is the last slide, nothing happens and
+		 * no error is raised.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
 		goToNext : function() {
 			return this.each(function() {
 				var self = $(this);
@@ -273,6 +378,14 @@
 			});
 		},
 
+		/**
+		 * Go to the slide before the currently active one.
+		 *
+		 * If the currently active slide is the first one, nothing happens and
+		 * no error is raised.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
 		goToPrevious : function() {
 			return this.each(function() {
 				var self = $(this);
@@ -286,6 +399,15 @@
 			});
 		},
 
+		/**
+		 * Cycle between slides.
+		 *
+		 * This method works similary to `goToNext`. The difference is that this
+		 * method returns the carousel to the first slide if the currently
+		 * active slide is the last one.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
 		cycle : function() {
 			return this.each(function() {
 				var self  = $(this),
@@ -302,6 +424,14 @@
 			});
 		},
 
+		/**
+		 * Start the carousel automatic cycling, if it has been defined in the
+		 * settings.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 *
+		 * @throws Exception If the speed setting is not set, or <= 0
+		 */
 		start : function() {
 			return this.each(function() {
 				var self  = $(this),
@@ -321,6 +451,11 @@
 			});
 		},
 
+		/**
+		 * Stop the carousel's automatic cycling, if it is currently running.
+		 *
+		 * @return object jQuery object for the selected elements, for chaining
+		 */
 		stop : function() {
 			return this.each(function() {
 				var state = $(this).data('carousel');
@@ -341,8 +476,5 @@
 		} else {
 			$.error('Method ' +  method + ' does not exist on jQuery.carousel');
 		}
-		// hover pause?
-		// methods for stop / start with intervals
-		// ensure widths are re-calculated on orientation change
 	};
 })(jQuery);
