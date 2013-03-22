@@ -168,7 +168,8 @@
 			return this.each(function() {
 				var self   = $(this),
 					state  = self.data('carousel'),
-					offset = (100 / state.slideCount) * index;
+					offset = (100 / state.slideCount) * index,
+					isLast = (index + 1 === state.slideCount);
 
 				// Validate the index
 				if (isNaN(index) || index < 0 || index >= state.slideCount) {
@@ -189,7 +190,12 @@
 					complete: function() {
 						// Fire the onChangeEnd event, if defined
 						if (typeof state.settings.onChangeEnd === 'function') {
-							return state.settings.onChangeEnd(self);
+							state.settings.onChangeEnd(self);
+						}
+
+						// Fire the onComplete event, if defined & this is the last slide
+						if (isLast && typeof state.settings.onComplete === 'function') {
+							state.settings.onComplete(self);
 						}
 					}
 				});
@@ -201,7 +207,7 @@
 
 				// Set disabled class on controls where necessary
 				state.arrows.previous.toggleClass('disabled', (index === 0));
-				state.arrows.next.toggleClass('disabled', (index + 1 === state.slideCount));
+				state.arrows.next.toggleClass('disabled', isLast);
 			});
 		},
 
