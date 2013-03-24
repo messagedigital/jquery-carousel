@@ -216,9 +216,11 @@ This plugin adds some helpful classes to various elements:
 	* This is added to the previous arrow when the active slide is the first slide
 * `active` is added to the current slide's indicator when the slide transition starts.
 
-## Roadmap ##
+## Contributing ##
 
-### Feature ideas ###
+This repository uses the [Git Flow](https://github.com/nvie/gitflow) workflow (see "[A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model/)") and [Semantic Versioning](http://semver.org/). Please follow these guidelines and use these tools when contributing to this repository.
+
+## Feature ideas ##
 
 * Add `randomise` option that will shuffle the carousel slides when initialising.
 * Add `infinite` option to imitate an "infinite" scrolling style.
