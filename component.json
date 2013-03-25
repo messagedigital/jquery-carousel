@@ -1,7 +1,12 @@
 {
-	"name": "carousel.jQuery",
-	"version": "1.0.1",
-	"main": "./js/carousel.jquery.js",
+	"name"       : "message-jquery-carousel",
+	"description": "Message's very own carousel plugin, ideal for snazzy e-commerce sites.",
+	"version"    : "1.0.1",
+	"main"       : "./js/carousel.jquery.js",
+	"ignore": [
+		"components",
+		"examples.html"
+	],
 	"dependencies": {
 		"jquery": "~1.9.0"
 	}

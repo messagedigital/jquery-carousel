@@ -31,8 +31,11 @@
 				width: 0;
 				height: 0;
 				top: 150px;
+				padding: 0;
 				cursor: pointer;
 				text-indent: -5000%;
+				background: transparent;
+				border: none;
 			}
 
 			.carousel .arrow.previous {
@@ -90,8 +93,8 @@
 			}
 		</style>
 
-		<script src="./js/jquery-1.9.1.min.js"></script>
-		<script src="./js/carousel.jquery.js"></script>
+		<script src="./components/jquery/jquery.min.js"></script>
+		<script src="./carousel.jquery.js"></script>
 		<script>
 			$(function() {
 				$('.carousel.standard ol').carousel({
