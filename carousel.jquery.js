@@ -115,8 +115,8 @@
 					}
 					// Generate the arrows
 					else if (settings.arrows === true) {
-						state.arrows.next     = $('<p class="arrow next">Next</p>').insertAfter(wrap);
-						state.arrows.previous = $('<p class="arrow previous">Previous</p>').insertAfter(wrap);
+						state.arrows.next     = $('<button class="arrow next">Next</button>').insertAfter(wrap);
+						state.arrows.previous = $('<button class="arrow previous">Previous</button>').insertAfter(wrap);
 					}
 
 					// Set events for the arrow controls

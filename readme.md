@@ -7,16 +7,43 @@ This jQuery plugin provides carousel functionality typical for the sites we buil
 This plugin is intended for installation using the [Bower](http://twitter.github.com/bower/) package management system for Javascript libraries. From within your project directory, run the following command to install this plugin to your configured components directory:
 
 	bower install git@server.local:jquery-plugins/carousel.git
+	
+## Dependencies ##
+
+This component depends on the following components:
+
+* **jquery** v1.9.0
 
 ## Prerequisites ##
 
-The only prerequisite for elements for which the carousel is instantiated on is that the element contains at least two child elements.
+The only prerequisite for elements for which the carousel is instantiated on is that the element contains at one child elements.
 
-The child elements are assumed to be the carousel slides.
+The child elements are assumed to be the carousel slides. If there is only one child element, the carousel will instantiate fine, but it will of course not do very much and be sort of useless.
+
+## Usage ##
+
+The plugin is instantiated as follows. The options parameter can be left blank, if you want to use all of the default options:
+
+	$('.my-gallery').carousel();
 
 ## Options ##
 
-The available configuration options are as follows. They are defined when instantiating the plugin.
+The available configuration options are as follows. They are defined when instantiating the plugin. Here's an overview of all available options and their default options:
+
+	$('.gallery').carousel({
+		arrows    : false,   // Show arrow controls
+		indicators: false,   // Show position indicators / controls
+		animation : 'slide', // Animation to use for moving between slides
+		speed     : 100,     // Speed in milliseconds for the animation
+		interval  : false,   // Interval in milliseconds for automatically moving between slides
+		flexible  : true,    // Determines whether the carousel has a flexible width
+
+		onReady      : false, // Callback for when the plugin is initialised
+		onChangeStart: false, // Callback for the start of the slide change animation
+		onChangeEnd  : false, // Callback for the end of the slide change animation
+		onComplete   : false, // Callback for the end of the slides being reached
+		onInteraction: false  // Callback for when a user interacts with any controls
+	});
 
 ### arrows ###
 
@@ -24,8 +51,8 @@ This defines whether or not previous/next arrow controls should be used. If pass
 
 If passed as `true`, the arrow controls will be generated and added to the DOM inside the target element as the following:
 
-	<p class="arrow previous">Previous</p>
-	<p class="arrow next">Next</p>
+	<button class="arrow previous">Previous</button>
+	<button class="arrow next">Next</button>
 
 If you wish to define your own HTML for the arrow controls, you can pass jQuery selectors for the arrow controls. These can either be passed as an array with two elements (the first is assumed as the previous control, and the second is assumed as the next control):
 
@@ -48,6 +75,8 @@ Or as an object with named properties of `next` and either `prev` or `previous`.
 			next    : $('.gallery .myNextButton')
 		}
 	});
+
+Note that the button elements can be any element, they don't have to be `<button>`'s.
 
 The `arrows` option defaults to `false`.
 
