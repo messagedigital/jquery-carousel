@@ -97,8 +97,7 @@
 				});
 
 				self.children().css({
-					display: 'block',
-					float  : 'left'
+					float: 'left'
 				});
 
 				// Initialise arrow controls
