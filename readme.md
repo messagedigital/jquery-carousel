@@ -6,7 +6,7 @@ This jQuery plugin provides carousel functionality typical for the sites we buil
 
 This plugin is intended for installation using the [Bower](http://twitter.github.com/bower/) package management system for Javascript libraries. From within your project directory, run the following command to install this plugin to your configured components directory:
 
-	bower install git@server.local:jquery-plugins/carousel.git
+	bower install git@github.com:messagedigital/jquery-carousel.git
 	
 ## Dependencies ##
 
@@ -247,11 +247,4 @@ This plugin adds some helpful classes to various elements:
 
 ## Contributing ##
 
-This repository uses the [Git Flow](https://github.com/nvie/gitflow) workflow (see "[A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model/)") and [Semantic Versioning](http://semver.org/). Please follow these guidelines and use these tools when contributing to this repository.
-
-## Feature ideas ##
-
-* Add `randomise` option that will shuffle the carousel slides when initialising.
-* Add `infinite` option to imitate an "infinite" scrolling style.
-* Add an option to introduce history functionality, so slide changes change your URL and hitting your back button takes you back a slide.
-* Add an option to allow the aspect ratio of the carousel to be maintained when it's resized, rather than just the width changing.
+This repository uses the [HubFlow](http://datasift.github.io/gitflow/index.html) workflow (see "[A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model/)") and [Semantic Versioning](http://semver.org/). Please follow these guidelines and use these tools when contributing to this repository.
