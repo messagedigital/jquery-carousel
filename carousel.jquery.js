@@ -100,6 +100,8 @@
 					float: 'left'
 				});
 
+				self.children(':first').addClass('carousel-active');
+
 				// Initialise arrow controls
 				if (settings.arrows !== false) {
 					// An object with named properties for next & previous/prev
@@ -274,6 +276,9 @@
 
 				// Set the current state
 				state.current = index;
+
+				// Change the active class
+				self.children().removeClass('carousel-active').eq(index).addClass('carousel-active');
 
 				// Fire the onChangeStart event, if defined
 				if (typeof state.settings.onChangeStart === 'function') {
